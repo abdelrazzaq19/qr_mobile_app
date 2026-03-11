@@ -1,23 +1,11 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:qr_app/core/routes.dart';
 
 class SplashPage extends StatelessWidget {
   const SplashPage({super.key});
 
-  void _navigateToNext() {
-    Future.delayed(const Duration(milliseconds: 3000), () {
-      Get.offNamed(AppRoutes.onboarding);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _navigateToNext();
-    });
-
     return const Scaffold(
       backgroundColor: Color(0xFF020508),
       body: _SplashBody(),
