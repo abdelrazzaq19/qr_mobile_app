@@ -1,5 +1,6 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
+import 'package:qr_app/env/env.dart';
 import 'package:qr_app/utils/const.dart';
 
 class ApiProvider extends GetConnect {
@@ -14,9 +15,10 @@ class ApiProvider extends GetConnect {
         request.headers['Authorization'] = 'Bearer $token';
       }
       request.headers['Content-Type'] = 'application/json';
+      request.headers['Accept'] = 'application/json';
+      request.headers['X-API-Key'] = Env.apiKey;
       return request;
     });
     super.onInit();
   }
 }
-// video ke 2 44m 11d
