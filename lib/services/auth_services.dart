@@ -66,6 +66,3 @@ class AuthServices extends GetxService {
     Get.offAllNamed(AppRoutes.login);
   }
 }
-
-
-// lanjut video ke 3 awal
