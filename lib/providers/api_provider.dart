@@ -16,7 +16,7 @@ class ApiProvider extends GetConnect {
       }
       request.headers['Content-Type'] = 'application/json';
       request.headers['Accept'] = 'application/json';
-      request.headers['X-API-Key'] = Env.apiKey;
+      request.headers['x-api-key'] = Env.apiKey;
       return request;
     });
     super.onInit();
