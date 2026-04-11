@@ -29,6 +29,7 @@ class MyTicketsTab extends StatelessWidget {
                   ],
                 ),
                 Divider(height: 24),
+                // Active Tickets
                 ExpansionTile(
                   title: Text('Active Tickets'),
                   initiallyExpanded: true,
@@ -50,11 +51,14 @@ class MyTicketsTab extends StatelessWidget {
                         return TicketTile();
                       },
                     ),
-                  ], //
+                  ],
                 ),
+                // Canceled Tickets
                 ExpansionTile(
-                  title: Text('Active Tickets'),
-                  initiallyExpanded: true,
+                  title: Text('Canceled Tickets'),
+                  backgroundColor: Theme.of(
+                    context,
+                  ).colorScheme.errorContainer.withAlpha(50),
                   childrenPadding: EdgeInsets.only(
                     left: 16,
                     right: 16,
@@ -73,7 +77,31 @@ class MyTicketsTab extends StatelessWidget {
                         return TicketTile();
                       },
                     ),
-                  ], //video ke 5 34m 10d
+                  ],
+                ),
+                // Used Tickets
+                ExpansionTile(
+                  title: Text('Used Tickets'),
+                  backgroundColor: Colors.yellow.shade700.withAlpha(50),
+                  childrenPadding: EdgeInsets.only(
+                    left: 16,
+                    right: 16,
+                    top: 16,
+                    bottom: 16,
+                  ),
+                  children: [
+                    ListView.separated(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      separatorBuilder: (BuildContext context, int index) {
+                        return SizedBox(height: 8);
+                      },
+                      itemCount: 4,
+                      itemBuilder: (context, index) {
+                        return TicketTile();
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),
