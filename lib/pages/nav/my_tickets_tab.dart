@@ -32,6 +32,7 @@ class MyTicketsTab extends StatelessWidget {
                 // Active Tickets
                 ExpansionTile(
                   title: Text('Active Tickets'),
+                  backgroundColor: Colors.yellow.shade700.withAlpha(50),
                   initiallyExpanded: true,
                   childrenPadding: EdgeInsets.only(
                     left: 16,
@@ -82,7 +83,7 @@ class MyTicketsTab extends StatelessWidget {
                 // Used Tickets
                 ExpansionTile(
                   title: Text('Used Tickets'),
-                  backgroundColor: Colors.yellow.shade700.withAlpha(50),
+                  backgroundColor: Colors.green.shade700.withAlpha(50),
                   childrenPadding: EdgeInsets.only(
                     left: 16,
                     right: 16,
