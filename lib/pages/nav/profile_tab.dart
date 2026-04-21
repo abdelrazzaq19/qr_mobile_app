@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:qr_app/core/themes.dart';
 import 'package:qr_app/services/auth_services.dart';
 import 'package:qr_app/utils/helper.dart';
 
@@ -8,186 +10,253 @@ class ProfileTab extends StatelessWidget {
 
   final _authServices = Get.find<AuthServices>();
 
-  // ── Palette ───────────────────────────────────────────────────
-  static const _bg         = Color(0xFF111111);
-  static const _card        = Color(0xFF1C1C1C);
-  static const _border      = Color(0xFF2B2B2B);
-  static const _accent      = Color(0xFFF97316);
-  static const _textPri     = Color(0xFFFFFFFF);
-  static const _textSec     = Color(0xFF888888);
-  static const _danger      = Color(0xFFE05555);
-
   @override
   Widget build(BuildContext context) {
     final user = _authServices.user.value!;
 
     return Scaffold(
-      backgroundColor: _bg,
+      backgroundColor: AppTheme.bg,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 24),
+              const SizedBox(height: 22),
 
-              // ── Avatar + name ────────────────────────────────
-              Row(
-                children: [
-                  // Avatar circle with accent ring
-                  Container(
-                    width: 64,
-                    height: 64,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: _accent, width: 2),
-                    ),
-                    child: const CircleAvatar(
-                      backgroundColor: Color(0xFF242424),
-                      child: Icon(Icons.person_rounded,
-                          size: 32, color: _textSec),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+              // ── Avatar + name ──────────────────────────────────────
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: AppTheme.surface,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: AppTheme.border),
+                ),
+                child: Row(
+                  children: [
+                    Stack(
                       children: [
-                        Text(
-                          user.name ?? '',
-                          style: const TextStyle(
-                            color: _textPri,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: -0.3,
+                        Container(
+                          width: 60,
+                          height: 60,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppTheme.accent.withOpacity(0.10),
+                            border: Border.all(
+                              color: AppTheme.accent.withOpacity(0.35),
+                              width: 2,
+                            ),
+                          ),
+                          child: const Icon(
+                            Icons.person_rounded,
+                            size: 28,
+                            color: AppTheme.accent,
                           ),
                         ),
-                        const SizedBox(height: 3),
-                        Text(
-                          user.email ?? '',
-                          style: const TextStyle(
-                              color: _textSec, fontSize: 13),
-                        ),
-                        const SizedBox(height: 6),
-                        Row(
-                          children: [
-                            _roleBadge(user.role),
-                            const SizedBox(width: 8),
-                            const Icon(Icons.calendar_today_rounded,
-                                size: 12, color: _textSec),
-                            const SizedBox(width: 4),
-                            Text(
-                              Helper.formatDate(user.createdAt!),
-                              style: const TextStyle(
-                                  color: _textSec, fontSize: 12),
+                        Positioned(
+                          bottom: 2,
+                          right: 2,
+                          child: Container(
+                            width: 12,
+                            height: 12,
+                            decoration: BoxDecoration(
+                              color: AppTheme.success,
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: AppTheme.surface,
+                                width: 2,
+                              ),
                             ),
-                          ],
+                          ),
                         ),
                       ],
                     ),
-                  ),
-                  // Edit icon
-                  GestureDetector(
-                    onTap: () {},
-                    child: Container(
-                      width: 36,
-                      height: 36,
-                      decoration: BoxDecoration(
-                        color: _card,
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: _border),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            user.name ?? '',
+                            style: GoogleFonts.dmSans(
+                              color: AppTheme.textPri,
+                              fontSize: 17,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: -0.3,
+                            ),
+                          ),
+                          const SizedBox(height: 3),
+                          Text(
+                            user.email ?? '',
+                            style: GoogleFonts.dmSans(
+                              color: AppTheme.textSec,
+                              fontSize: 12,
+                            ),
+                          ),
+                          const SizedBox(height: 7),
+                          Row(
+                            children: [
+                              _roleBadge(user.role),
+                              const SizedBox(width: 8),
+                              const Icon(
+                                Icons.calendar_today_rounded,
+                                size: 11,
+                                color: AppTheme.textSec,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                Helper.formatDate(user.createdAt!),
+                                style: GoogleFonts.dmSans(
+                                  color: AppTheme.textSec,
+                                  fontSize: 11,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                      child: const Icon(Icons.edit_outlined,
-                          size: 16, color: _textSec),
                     ),
-                  ),
-                ],
+                    Container(
+                      width: 34,
+                      height: 34,
+                      decoration: BoxDecoration(
+                        color: AppTheme.surface2,
+                        borderRadius: BorderRadius.circular(9),
+                        border: Border.all(color: AppTheme.border),
+                      ),
+                      child: const Icon(
+                        Icons.edit_outlined,
+                        size: 15,
+                        color: AppTheme.textSec,
+                      ),
+                    ),
+                  ],
+                ),
               ),
 
-              const SizedBox(height: 24),
+              const SizedBox(height: 16),
 
-              // ── Stats strip ───────────────────────────────────
+              // ── Stats ──────────────────────────────────────────────
               Container(
-                padding: const EdgeInsets.symmetric(vertical: 16),
                 decoration: BoxDecoration(
-                  color: _card,
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: _border),
+                  color: AppTheme.surface,
+                  borderRadius: BorderRadius.circular(18),
+                  border: Border.all(color: AppTheme.border),
                 ),
                 child: Row(
                   children: [
                     _stat('12', 'QR Codes'),
-                    _divider(),
+                    _vDiv(),
                     _stat('248', 'Scans'),
-                    _divider(),
+                    _vDiv(),
                     _stat('248', 'Verified'),
                   ],
                 ),
               ),
 
-              const SizedBox(height: 28),
+              const SizedBox(height: 26),
 
-              // ── General ───────────────────────────────────────
-              _sectionLabel('General'),
-              const SizedBox(height: 8),
+              // ── General ───────────────────────────────────────────
+              _sectionLabel('GENERAL'),
+              const SizedBox(height: 10),
               _menuCard([
-                _item(Icons.language_rounded, 'Language'),
-                _item(Icons.currency_exchange_rounded, 'Currencies',
-                    last: true),
+                _menuItem(
+                  Icons.language_rounded,
+                  'Language',
+                  accent: const Color(0xFF60A5FA),
+                ),
+                _menuItem(
+                  Icons.currency_exchange_rounded,
+                  'Currencies',
+                  accent: AppTheme.success,
+                  last: true,
+                ),
               ]),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 18),
 
-              // ── Security ──────────────────────────────────────
-              _sectionLabel('Security'),
-              const SizedBox(height: 8),
+              // ── Security ─────────────────────────────────────────
+              _sectionLabel('SECURITY'),
+              const SizedBox(height: 10),
               _menuCard([
-                _item(Icons.qr_code_scanner_rounded, 'Application Security'),
-                _item(Icons.devices_rounded, 'Manage Devices'),
-                _item(Icons.lock_outline_rounded, 'Change Password',
-                    last: true),
+                _menuItem(
+                  Icons.qr_code_scanner_rounded,
+                  'Application Security',
+                  accent: AppTheme.accent,
+                ),
+                _menuItem(
+                  Icons.devices_rounded,
+                  'Manage Devices',
+                  accent: const Color(0xFFA78BFA),
+                ),
+                _menuItem(
+                  Icons.lock_outline_rounded,
+                  'Change Password',
+                  accent: AppTheme.accentAlt,
+                  last: true,
+                ),
               ]),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 18),
 
-              // ── Preferences ───────────────────────────────────
-              _sectionLabel('Preferences'),
-              const SizedBox(height: 8),
+              // ── Preferences ──────────────────────────────────────
+              _sectionLabel('PREFERENCES'),
+              const SizedBox(height: 10),
               _menuCard([
-                _item(Icons.tune_rounded, 'Appearance'),
-                _item(Icons.description_outlined, 'Terms & Conditions',
-                    last: true),
+                _menuItem(
+                  Icons.tune_rounded,
+                  'Appearance',
+                  accent: AppTheme.info,
+                ),
+                _menuItem(
+                  Icons.description_outlined,
+                  'Terms & Conditions',
+                  accent: AppTheme.textSec,
+                  last: true,
+                ),
               ]),
 
-              const SizedBox(height: 28),
+              const SizedBox(height: 24),
 
-              // ── Logout ────────────────────────────────────────
+              // ── Logout ────────────────────────────────────────────
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () => _authServices.logout(),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: _danger.withOpacity(0.1),
+                    backgroundColor: AppTheme.danger.withOpacity(0.08),
                     elevation: 0,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    padding: const EdgeInsets.symmetric(vertical: 15),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(14),
                       side: BorderSide(
-                          color: _danger.withOpacity(0.3), width: 0.8),
+                        color: AppTheme.danger.withOpacity(0.25),
+                      ),
                     ),
                   ),
-                  child: const Text(
-                    'Log Out',
-                    style: TextStyle(
-                      color: _danger,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 15,
-                    ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.logout_rounded,
+                        color: AppTheme.danger,
+                        size: 17,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Log Out',
+                        style: GoogleFonts.dmSans(
+                          color: AppTheme.danger,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
 
-              const SizedBox(height: 40),
+              const SizedBox(height: 36),
             ],
           ),
         ),
@@ -195,31 +264,23 @@ class ProfileTab extends StatelessWidget {
     );
   }
 
-  // ── Helpers ───────────────────────────────────────────────────
-
   Widget _roleBadge(String? role) {
     final isAdmin = role == 'admin';
+    final color = isAdmin ? AppTheme.accent : AppTheme.success;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
-        color: isAdmin
-            ? _accent.withOpacity(0.12)
-            : const Color(0x1A44BB66),
+        color: color.withOpacity(0.10),
         borderRadius: BorderRadius.circular(99),
-        border: Border.all(
-          color: isAdmin
-              ? _accent.withOpacity(0.35)
-              : const Color(0x4044BB66),
-          width: 0.5,
-        ),
+        border: Border.all(color: color.withOpacity(0.3), width: 0.5),
       ),
       child: Text(
         role?.toUpperCase() ?? '',
-        style: TextStyle(
+        style: GoogleFonts.dmSans(
           fontSize: 10,
           fontWeight: FontWeight.w700,
-          color: isAdmin ? _accent : const Color(0xFF55CC77),
-          letterSpacing: 0.4,
+          color: color,
+          letterSpacing: 0.5,
         ),
       ),
     );
@@ -227,75 +288,95 @@ class ProfileTab extends StatelessWidget {
 
   Widget _stat(String value, String label) {
     return Expanded(
-      child: Column(
-        children: [
-          Text(value,
-              style: const TextStyle(
-                  color: _accent,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700)),
-          const SizedBox(height: 2),
-          Text(label,
-              style: const TextStyle(color: _textSec, fontSize: 12)),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        child: Column(
+          children: [
+            Text(
+              value,
+              style: GoogleFonts.dmSans(
+                color: AppTheme.accent,
+                fontSize: 18,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              label,
+              style: GoogleFonts.dmSans(color: AppTheme.textSec, fontSize: 11),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _divider() =>
-      Container(width: 0.5, height: 32, color: _border);
+  Widget _vDiv() => Container(width: 1, height: 36, color: AppTheme.border);
 
   Widget _sectionLabel(String title) => Text(
-        title.toUpperCase(),
-        style: const TextStyle(
-          fontSize: 11,
-          fontWeight: FontWeight.w600,
-          color: _textSec,
-          letterSpacing: 1.0,
-        ),
-      );
+    title,
+    style: GoogleFonts.dmSans(
+      fontSize: 10,
+      fontWeight: FontWeight.w700,
+      color: AppTheme.textSec,
+      letterSpacing: 1.5,
+    ),
+  );
 
   Widget _menuCard(List<Widget> items) => Container(
-        decoration: BoxDecoration(
-          color: _card,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: _border),
-        ),
-        child: Column(children: items),
-      );
+    decoration: BoxDecoration(
+      color: AppTheme.surface,
+      borderRadius: BorderRadius.circular(18),
+      border: Border.all(color: AppTheme.border),
+    ),
+    child: Column(children: items),
+  );
 
-  Widget _item(IconData icon, String label, {bool last = false}) {
+  Widget _menuItem(
+    IconData icon,
+    String label, {
+    bool last = false,
+    Color accent = AppTheme.textSec,
+  }) {
     return Column(
       children: [
         ListTile(
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 2,
+          ),
           dense: true,
           leading: Container(
             width: 34,
             height: 34,
             decoration: BoxDecoration(
-              color: const Color(0xFF242424),
+              color: accent.withOpacity(0.10),
               borderRadius: BorderRadius.circular(9),
-              border: Border.all(color: _border, width: 0.5),
             ),
-            child: Icon(icon, size: 17, color: _textSec),
+            child: Icon(icon, size: 16, color: accent),
           ),
-          title: Text(label,
-              style: const TextStyle(
-                  color: _textPri,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500)),
-          trailing: const Icon(Icons.chevron_right_rounded,
-              color: _textSec, size: 18),
+          title: Text(
+            label,
+            style: GoogleFonts.dmSans(
+              color: AppTheme.textPri,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          trailing: const Icon(
+            Icons.chevron_right_rounded,
+            color: AppTheme.textSec,
+            size: 18,
+          ),
           onTap: () {},
         ),
         if (!last)
-          Divider(
-              height: 1,
-              indent: 66,
-              endIndent: 16,
-              color: _border),
+          const Divider(
+            height: 1,
+            indent: 64,
+            endIndent: 16,
+            color: AppTheme.border,
+          ),
       ],
     );
   }

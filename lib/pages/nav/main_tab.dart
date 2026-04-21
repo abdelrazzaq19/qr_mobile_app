@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:qr_app/controllers/events_controller.dart';
 import 'package:qr_app/controllers/tickets_controller.dart';
+import 'package:qr_app/core/themes.dart';
 
 class MainTab extends StatelessWidget {
   const MainTab({super.key});
@@ -12,22 +14,21 @@ class MainTab extends StatelessWidget {
     final controller = Get.put(EventsController());
 
     return Scaffold(
-      backgroundColor: const Color(0xFF080B14),
+      backgroundColor: AppTheme.bg,
       body: SafeArea(
         child: Column(
           children: [
             _buildHeader(),
-            const SizedBox(height: 4),
             _buildScannerFrame(context),
-            const SizedBox(height: 28),
+            const SizedBox(height: 24),
             Expanded(
               child: Container(
                 decoration: const BoxDecoration(
-                  color: Color(0xFF0F1320),
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+                  color: AppTheme.surface,
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+                  border: Border(top: BorderSide(color: AppTheme.border)),
                 ),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildEventsHeader(controller),
                     Expanded(child: _buildEventsList(controller)),
@@ -43,23 +44,19 @@ class MainTab extends StatelessWidget {
 
   Widget _buildHeader() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 20, 24, 8),
+      padding: const EdgeInsets.fromLTRB(20, 18, 20, 12),
       child: Row(
         children: [
-          // Logo mark
           Container(
-            width: 44,
-            height: 44,
+            width: 42,
+            height: 42,
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Color(0xFF6C63FF), Color(0xFF3ECFCF)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(14),
+              color: AppTheme.surface,
+              borderRadius: BorderRadius.circular(13),
+              border: Border.all(color: AppTheme.accent.withOpacity(0.3)),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFF6C63FF).withOpacity(0.4),
+                  color: AppTheme.accent.withOpacity(0.1),
                   blurRadius: 14,
                   offset: const Offset(0, 4),
                 ),
@@ -67,48 +64,46 @@ class MainTab extends StatelessWidget {
             ),
             child: const Icon(
               Icons.qr_code_rounded,
-              color: Colors.white,
-              size: 22,
+              color: AppTheme.accent,
+              size: 20,
             ),
           ),
-          const SizedBox(width: 14),
-          const Expanded(
+          const SizedBox(width: 12),
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   'EVENTPASS',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 17,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: 2.5,
+                  style: GoogleFonts.spaceMono(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                    color: AppTheme.textPri,
+                    letterSpacing: 2,
                   ),
                 ),
                 Text(
                   'Scan · Check-in · Attend',
-                  style: TextStyle(
-                    color: Color(0xFF5A6080),
+                  style: GoogleFonts.dmSans(
                     fontSize: 11,
-                    letterSpacing: 0.6,
+                    color: AppTheme.textSec,
                   ),
                 ),
               ],
             ),
           ),
-          // Notification bell
           Container(
-            width: 40,
-            height: 40,
+            width: 38,
+            height: 38,
             decoration: BoxDecoration(
-              color: const Color(0xFF161C2E),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0xFF1F2840)),
+              color: AppTheme.surface2,
+              borderRadius: BorderRadius.circular(11),
+              border: Border.all(color: AppTheme.border),
             ),
             child: const Icon(
               Icons.notifications_none_rounded,
-              color: Color(0xFF5A6080),
-              size: 20,
+              color: AppTheme.textSec,
+              size: 18,
             ),
           ),
         ],
@@ -118,88 +113,80 @@ class MainTab extends StatelessWidget {
 
   Widget _buildScannerFrame(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: GestureDetector(
-        onTap: () {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('QR Scanner feature will be implemented'),
-              backgroundColor: Color(0xFF6C63FF),
-            ),
-          );
-        },
+        onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('QR Scanner feature will be implemented'),
+            backgroundColor: AppTheme.surface2,
+          ),
+        ),
         child: Container(
-          height: 188,
+          height: 176,
           decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [Color(0xFF111827), Color(0xFF0F1320)],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-            borderRadius: BorderRadius.circular(28),
-            border: Border.all(color: const Color(0xFF1F2840), width: 1.5),
+            color: AppTheme.surface2,
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(color: AppTheme.border),
           ),
           child: Stack(
             children: [
-              // Subtle radial glow behind icon
+              // glow center
               Center(
                 child: Container(
-                  width: 120,
-                  height: 120,
+                  width: 100,
+                  height: 100,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     gradient: RadialGradient(
                       colors: [
-                        const Color(0xFF6C63FF).withOpacity(0.18),
+                        AppTheme.accent.withOpacity(0.10),
                         Colors.transparent,
                       ],
                     ),
                   ),
                 ),
               ),
-              ..._buildCornerBrackets(),
-              // Scan line
+              // corners
+              ..._corners(),
+              // scan line
               Positioned(
-                left: 48,
-                right: 48,
-                top: 94,
+                left: 52,
+                right: 52,
+                top: 88,
                 child: Container(
                   height: 1.5,
                   decoration: BoxDecoration(
-                    gradient: const LinearGradient(
+                    gradient: LinearGradient(
                       colors: [
                         Colors.transparent,
-                        Color(0xFF3ECFCF),
+                        AppTheme.accent,
+                        AppTheme.accent,
                         Colors.transparent,
                       ],
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFF3ECFCF).withOpacity(0.6),
-                        blurRadius: 10,
-                        spreadRadius: 2,
+                        color: AppTheme.accent.withOpacity(0.5),
+                        blurRadius: 8,
                       ),
                     ],
                   ),
                 ),
               ),
+              // center content
               Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                      width: 60,
-                      height: 60,
+                      width: 54,
+                      height: 54,
                       decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [Color(0xFF6C63FF), Color(0xFF3ECFCF)],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
                         shape: BoxShape.circle,
+                        color: AppTheme.accent,
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFF6C63FF).withOpacity(0.35),
+                            color: AppTheme.accent.withOpacity(0.35),
                             blurRadius: 16,
                             spreadRadius: 2,
                           ),
@@ -208,26 +195,25 @@ class MainTab extends StatelessWidget {
                       child: const Icon(
                         Icons.qr_code_scanner_rounded,
                         color: Colors.white,
-                        size: 28,
+                        size: 26,
                       ),
                     ),
-                    const SizedBox(height: 14),
-                    const Text(
+                    const SizedBox(height: 12),
+                    Text(
                       'TAP TO SCAN',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 13,
+                      style: GoogleFonts.spaceMono(
+                        fontSize: 11,
                         fontWeight: FontWeight.w700,
-                        letterSpacing: 2.0,
+                        color: AppTheme.textPri,
+                        letterSpacing: 2,
                       ),
                     ),
                     const SizedBox(height: 4),
-                    const Text(
+                    Text(
                       'Position QR code within frame',
-                      style: TextStyle(
-                        color: Color(0xFF3A4060),
+                      style: GoogleFonts.dmSans(
                         fontSize: 11,
-                        letterSpacing: 0.3,
+                        color: AppTheme.textSec,
                       ),
                     ),
                   ],
@@ -240,77 +226,102 @@ class MainTab extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildCornerBrackets() {
-    const color = Color(0xFF6C63FF);
-    const size = 22.0;
-    const thickness = 2.5;
-
-    Widget corner({
-      required bool top,
-      required bool left,
-    }) {
-      return Positioned(
-        top: top ? 18 : null,
-        bottom: top ? null : 18,
-        left: left ? 18 : null,
-        right: left ? null : 18,
-        child: SizedBox(
-          width: size,
-          height: size,
-          child: CustomPaint(
-            painter: _CornerBracketPainter(
-              color: color,
-              thickness: thickness,
-              isTopLeft: top && left,
-              isTopRight: top && !left,
-              isBottomLeft: !top && left,
-              isBottomRight: !top && !left,
-            ),
-          ),
+  List<Widget> _corners() {
+    const color = AppTheme.accent;
+    const s = 20.0, t = 2.2, off = 16.0;
+    Widget b(
+      double? top,
+      double? bot,
+      double? left,
+      double? right,
+      Border border,
+    ) => Positioned(
+      top: top,
+      bottom: bot,
+      left: left,
+      right: right,
+      child: Container(
+        width: s,
+        height: s,
+        decoration: BoxDecoration(
+          border: border,
+          borderRadius: BorderRadius.circular(3),
         ),
-      );
-    }
-
+      ),
+    );
     return [
-      corner(top: true, left: true),
-      corner(top: true, left: false),
-      corner(top: false, left: true),
-      corner(top: false, left: false),
+      b(
+        off,
+        null,
+        off,
+        null,
+        const Border(
+          top: BorderSide(color: color, width: t),
+          left: BorderSide(color: color, width: t),
+        ),
+      ),
+      b(
+        off,
+        null,
+        null,
+        off,
+        const Border(
+          top: BorderSide(color: color, width: t),
+          right: BorderSide(color: color, width: t),
+        ),
+      ),
+      b(
+        null,
+        off,
+        off,
+        null,
+        const Border(
+          bottom: BorderSide(color: color, width: t),
+          left: BorderSide(color: color, width: t),
+        ),
+      ),
+      b(
+        null,
+        off,
+        null,
+        off,
+        const Border(
+          bottom: BorderSide(color: color, width: t),
+          right: BorderSide(color: color, width: t),
+        ),
+      ),
     ];
   }
 
   Widget _buildEventsHeader(EventsController controller) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 14),
       child: Row(
         children: [
-          // Section label pill
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Color(0xFF6C63FF), Color(0xFF3ECFCF)],
-              ),
+              color: AppTheme.accent,
               borderRadius: BorderRadius.circular(20),
             ),
-            child: const Text(
+            child: Text(
               'LIVE',
-              style: TextStyle(
+              style: GoogleFonts.spaceMono(
                 color: Colors.white,
-                fontSize: 10,
-                fontWeight: FontWeight.w800,
+                fontSize: 9,
+                fontWeight: FontWeight.w700,
                 letterSpacing: 1.5,
               ),
             ),
           ),
-          const SizedBox(width: 12),
-          const Text(
+          const SizedBox(width: 10),
+          Text(
             'Events',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 20,
+            style: GoogleFonts.dmSans(
+              fontSize: 18,
               fontWeight: FontWeight.w700,
-              letterSpacing: -0.5,
+              color: AppTheme.textPri,
+              letterSpacing: -0.3,
             ),
           ),
           const Spacer(),
@@ -318,14 +329,14 @@ class MainTab extends StatelessWidget {
             () => Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               decoration: BoxDecoration(
-                color: const Color(0xFF161C2E),
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: const Color(0xFF1F2840)),
+                color: AppTheme.surface2,
+                borderRadius: BorderRadius.circular(9),
+                border: Border.all(color: AppTheme.border),
               ),
               child: Text(
                 '${controller.events.length} total',
-                style: const TextStyle(
-                  color: Color(0xFF5A6080),
+                style: GoogleFonts.dmSans(
+                  color: AppTheme.textSec,
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
                 ),
@@ -342,36 +353,35 @@ class MainTab extends StatelessWidget {
       if (controller.isLoadingEvents.value) {
         return const Center(
           child: CircularProgressIndicator(
-            color: Color(0xFF6C63FF),
+            color: AppTheme.accent,
             strokeWidth: 2,
           ),
         );
       }
-
       if (controller.events.isEmpty) {
         return Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                width: 80,
-                height: 80,
+                width: 72,
+                height: 72,
                 decoration: BoxDecoration(
-                  color: const Color(0xFF161C2E),
+                  color: AppTheme.surface2,
                   shape: BoxShape.circle,
-                  border: Border.all(color: const Color(0xFF1F2840)),
+                  border: Border.all(color: AppTheme.border),
                 ),
                 child: Icon(
                   Icons.event_busy_rounded,
-                  color: const Color(0xFF3A4060).withOpacity(0.8),
-                  size: 36,
+                  color: AppTheme.textSec.withOpacity(0.5),
+                  size: 32,
                 ),
               ),
-              const SizedBox(height: 16),
-              const Text(
+              const SizedBox(height: 14),
+              Text(
                 'No events available',
-                style: TextStyle(
-                  color: Color(0xFF5A6080),
+                style: GoogleFonts.dmSans(
+                  color: AppTheme.textSec,
                   fontSize: 15,
                   fontWeight: FontWeight.w500,
                 ),
@@ -380,19 +390,15 @@ class MainTab extends StatelessWidget {
           ),
         );
       }
-
       return RefreshIndicator(
-        color: const Color(0xFF6C63FF),
-        backgroundColor: const Color(0xFF0F1320),
+        color: AppTheme.accent,
+        backgroundColor: AppTheme.surface,
         onRefresh: () => controller.fetchEvents(),
         child: ListView.separated(
-          padding: const EdgeInsets.only(left: 24, right: 24, bottom: 24),
+          padding: const EdgeInsets.fromLTRB(20, 4, 20, 20),
           itemCount: controller.events.length,
-          separatorBuilder: (_, __) => const SizedBox(height: 14),
-          itemBuilder: (ctx, i) {
-            final event = controller.events[i];
-            return _buildEventCard(event);
-          },
+          separatorBuilder: (_, __) => const SizedBox(height: 12),
+          itemBuilder: (ctx, i) => _buildEventCard(controller.events[i]),
         ),
       );
     });
@@ -404,54 +410,45 @@ class MainTab extends StatelessWidget {
         : '-';
     final tickets = event.ticketsCount ?? 0;
     final maxR = event.maxReservation ?? 0;
-    final progress = event.progress.clamp(0.0, 1.0);
+    final progress = event.progress.clamp(0.0, 1.0) as double;
+    final status = event.status as String;
 
-    final status = event.status;
-
-    // Color scheme per status
     final Color statusColor;
-    final Color progressColor;
     final String statusLabel;
-
     switch (status) {
       case 'completed':
-        statusColor = const Color(0xFF60A5FA);
-        progressColor = const Color(0xFF60A5FA);
+        statusColor = AppTheme.info;
         statusLabel = 'Completed';
         break;
       case 'full':
-        statusColor = const Color(0xFFFF6B6B);
-        progressColor = const Color(0xFFFF6B6B);
+        statusColor = AppTheme.danger;
         statusLabel = 'Full';
         break;
       default:
-        statusColor = const Color(0xFF3ECFCF);
-        progressColor = const Color(0xFF6C63FF);
+        statusColor = AppTheme.success;
         statusLabel = 'Active';
     }
-
-    final bool canJoin = status != 'completed' && status != 'full';
+    final canJoin = status != 'completed' && status != 'full';
 
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFF161C2E),
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: const Color(0xFF1F2840), width: 1),
+        color: AppTheme.bg,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppTheme.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ── Top section ─────────────────────────────────
+          // top
           Padding(
-            padding: const EdgeInsets.fromLTRB(18, 18, 18, 0),
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Color dot accent
                 Container(
-                  width: 10,
-                  height: 10,
-                  margin: const EdgeInsets.only(top: 5, right: 10),
+                  width: 8,
+                  height: 8,
+                  margin: const EdgeInsets.only(top: 6, right: 10),
                   decoration: BoxDecoration(
                     color: statusColor,
                     shape: BoxShape.circle,
@@ -467,91 +464,67 @@ class MainTab extends StatelessWidget {
                 Expanded(
                   child: Text(
                     event.name ?? 'Unnamed Event',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
+                    style: GoogleFonts.dmSans(
+                      color: AppTheme.textPri,
+                      fontSize: 15,
                       fontWeight: FontWeight.w700,
-                      letterSpacing: -0.3,
-                      height: 1.3,
+                      letterSpacing: -0.2,
                     ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 const SizedBox(width: 10),
-                // Status pill
                 Container(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 4,
+                    horizontal: 9,
+                    vertical: 3,
                   ),
                   decoration: BoxDecoration(
                     color: statusColor.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                      color: statusColor.withOpacity(0.25),
-                      width: 1,
-                    ),
+                    borderRadius: BorderRadius.circular(7),
+                    border: Border.all(color: statusColor.withOpacity(0.22)),
                   ),
                   child: Text(
                     statusLabel,
-                    style: TextStyle(
+                    style: GoogleFonts.dmSans(
                       color: statusColor,
                       fontSize: 10,
                       fontWeight: FontWeight.w700,
-                      letterSpacing: 0.8,
+                      letterSpacing: 0.5,
                     ),
                   ),
                 ),
               ],
             ),
           ),
-
           if (event.desc != null && event.desc!.isNotEmpty)
             Padding(
-              padding: const EdgeInsets.fromLTRB(38, 8, 18, 0),
+              padding: const EdgeInsets.fromLTRB(34, 7, 16, 0),
               child: Text(
                 event.desc!,
-                style: const TextStyle(
-                  color: Color(0xFF3A4060),
-                  fontSize: 13,
-                  height: 1.5,
-                ),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
+                style: GoogleFonts.dmSans(
+                  color: AppTheme.textSec,
+                  fontSize: 12,
+                  height: 1.5,
+                ),
               ),
             ),
-
-          const SizedBox(height: 16),
-
-          // ── Divider ─────────────────────────────────────
-          Container(
-            height: 1,
-            color: const Color(0xFF1F2840),
-          ),
-
-          // ── Meta row ────────────────────────────────────
+          const SizedBox(height: 14),
+          Container(height: 1, color: AppTheme.border),
+          // meta row
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 11),
             child: Row(
               children: [
-                _metaChip(
-                  icon: Icons.calendar_month_rounded,
-                  label: dateStr,
-                  color: const Color(0xFF5A6080),
-                ),
+                _metaChip(Icons.calendar_month_rounded, dateStr),
                 const SizedBox(width: 12),
-                _metaChip(
-                  icon: Icons.group_rounded,
-                  label: '$tickets / $maxR',
-                  color: const Color(0xFF5A6080),
-                ),
+                _metaChip(Icons.group_rounded, '$tickets / $maxR'),
                 const Spacer(),
-                // Compact progress label
                 Text(
                   '${(progress * 100).toInt()}%',
-                  style: TextStyle(
-                    color: progressColor,
+                  style: GoogleFonts.dmSans(
+                    color: statusColor,
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
                   ),
@@ -559,87 +532,65 @@ class MainTab extends StatelessWidget {
               ],
             ),
           ),
-
-          // ── Progress bar ────────────────────────────────
+          // progress
           Padding(
-            padding: const EdgeInsets.fromLTRB(18, 0, 18, 16),
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(6),
               child: LinearProgressIndicator(
                 value: progress,
-                minHeight: 5,
-                backgroundColor: const Color(0xFF1F2840),
-                valueColor: AlwaysStoppedAnimation<Color>(progressColor),
+                minHeight: 4,
+                backgroundColor: AppTheme.border,
+                valueColor: AlwaysStoppedAnimation<Color>(statusColor),
               ),
             ),
           ),
-
-          // ── CTA Button ──────────────────────────────────
+          // CTA
           Padding(
-            padding: const EdgeInsets.fromLTRB(18, 0, 18, 18),
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
             child: SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: canJoin
                     ? () => Get.find<TicketsController>().reserveTicket(
-                          event.id.toString(),
-                        )
+                        event.id.toString(),
+                      )
                     : null,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                  disabledBackgroundColor: const Color(0xFF1A2035),
-                  foregroundColor: Colors.white,
-                  disabledForegroundColor: const Color(0xFF3A4060),
+                  backgroundColor: canJoin
+                      ? AppTheme.accent
+                      : AppTheme.surface2,
+                  disabledBackgroundColor: AppTheme.surface2,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  padding: EdgeInsets.zero,
+                  padding: const EdgeInsets.symmetric(vertical: 13),
                   elevation: 0,
                 ),
-                child: Ink(
-                  decoration: BoxDecoration(
-                    gradient: canJoin
-                        ? const LinearGradient(
-                            colors: [Color(0xFF6C63FF), Color(0xFF3ECFCF)],
-                            begin: Alignment.centerLeft,
-                            end: Alignment.centerRight,
-                          )
-                        : null,
-                    color: canJoin ? null : const Color(0xFF1A2035),
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: Container(
-                    height: 48,
-                    alignment: Alignment.center,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        if (canJoin) ...[
-                          const Icon(
-                            Icons.confirmation_num_rounded,
-                            size: 16,
-                            color: Colors.white,
-                          ),
-                          const SizedBox(width: 8),
-                        ],
-                        Text(
-                          canJoin
-                              ? 'Reserve Ticket'
-                              : status == 'full'
-                                  ? 'Sold Out'
-                                  : 'Event Ended',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 13,
-                            letterSpacing: 0.5,
-                            color: canJoin
-                                ? Colors.white
-                                : const Color(0xFF3A4060),
-                          ),
-                        ),
-                      ],
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (canJoin) ...[
+                      const Icon(
+                        Icons.confirmation_num_rounded,
+                        size: 15,
+                        color: Colors.white,
+                      ),
+                      const SizedBox(width: 7),
+                    ],
+                    Text(
+                      canJoin
+                          ? 'Reserve Ticket'
+                          : status == 'full'
+                          ? 'Sold Out'
+                          : 'Event Ended',
+                      style: GoogleFonts.dmSans(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 13,
+                        color: canJoin ? Colors.white : AppTheme.textSec,
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ),
             ),
@@ -649,77 +600,21 @@ class MainTab extends StatelessWidget {
     );
   }
 
-  Widget _metaChip({
-    required IconData icon,
-    required String label,
-    required Color color,
-  }) {
+  Widget _metaChip(IconData icon, String label) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, size: 13, color: color),
+        Icon(icon, size: 12, color: AppTheme.textSec),
         const SizedBox(width: 5),
         Text(
           label,
-          style: TextStyle(
-            color: color,
-            fontSize: 12,
+          style: GoogleFonts.dmSans(
+            color: AppTheme.textSec,
+            fontSize: 11,
             fontWeight: FontWeight.w500,
           ),
         ),
       ],
     );
   }
-}
-
-class _CornerBracketPainter extends CustomPainter {
-  final Color color;
-  final double thickness;
-  final bool isTopLeft;
-  final bool isTopRight;
-  final bool isBottomLeft;
-  final bool isBottomRight;
-
-  _CornerBracketPainter({
-    required this.color,
-    required this.thickness,
-    required this.isTopLeft,
-    required this.isTopRight,
-    required this.isBottomLeft,
-    required this.isBottomRight,
-  });
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..strokeWidth = thickness
-      ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round;
-
-    final path = Path();
-
-    if (isTopLeft) {
-      path.moveTo(size.width, 0);
-      path.lineTo(0, 0);
-      path.lineTo(0, size.height);
-    } else if (isTopRight) {
-      path.moveTo(0, 0);
-      path.lineTo(size.width, 0);
-      path.lineTo(size.width, size.height);
-    } else if (isBottomLeft) {
-      path.moveTo(0, 0);
-      path.lineTo(0, size.height);
-      path.lineTo(size.width, size.height);
-    } else if (isBottomRight) {
-      path.moveTo(0, size.height);
-      path.lineTo(size.width, size.height);
-      path.lineTo(size.width, 0);
-    }
-
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

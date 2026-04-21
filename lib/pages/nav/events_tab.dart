@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:qr_app/controllers/events_controller.dart';
+import 'package:qr_app/core/themes.dart';
 import 'package:qr_app/models/events_model.dart';
 import 'package:qr_app/utils/show_snack.dart';
 
@@ -13,10 +15,11 @@ class EventsTab extends StatelessWidget {
     final controller = Get.put(EventsController());
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0D0D0D),
+      backgroundColor: AppTheme.bg,
       body: SafeArea(
         child: RefreshIndicator(
-          color: const Color(0xFFF97316),
+          color: AppTheme.accent,
+          backgroundColor: AppTheme.surface,
           onRefresh: () => controller.fetchEvents(),
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
@@ -25,14 +28,14 @@ class EventsTab extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildHeader(context, controller),
-                const SizedBox(height: 24),
+                const SizedBox(height: 22),
                 _buildStatsRow(controller),
-                const SizedBox(height: 28),
-                _buildSectionTitle('Recent Events'),
+                const SizedBox(height: 26),
+                _sectionLabel('EVENTS'),
                 const SizedBox(height: 12),
                 _buildEventList(context, controller),
-                const SizedBox(height: 28),
-                _buildSectionTitle('Quick Actions'),
+                const SizedBox(height: 26),
+                _sectionLabel('QUICK ACTIONS'),
                 const SizedBox(height: 12),
                 _buildQuickActions(context, controller),
                 const SizedBox(height: 100),
@@ -43,51 +46,57 @@ class EventsTab extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => controller.showCreateSheet(context),
-        backgroundColor: const Color(0xFFF97316),
+        backgroundColor: AppTheme.accent,
         icon: const Icon(Icons.add_rounded, color: Colors.white),
-        label: const Text(
+        label: Text(
           'New Event',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+          style: GoogleFonts.dmSans(
+            color: Colors.white,
+            fontWeight: FontWeight.w700,
+          ),
         ),
+        elevation: 4,
       ),
     );
   }
 
-  // ── HEADER ────────────────────────────────────────────────────
   Widget _buildHeader(BuildContext context, EventsController controller) {
     return Row(
       children: [
         Container(
-          width: 38,
-          height: 38,
+          width: 40,
+          height: 40,
           decoration: BoxDecoration(
-            color: const Color(0xFF1A1A1A),
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: const Color(0xFFF97316).withOpacity(0.4)),
+            color: AppTheme.surface,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: AppTheme.accent.withOpacity(0.3)),
           ),
           child: const Icon(
             Icons.campaign_rounded,
-            color: Color(0xFFF97316),
+            color: AppTheme.accent,
             size: 20,
           ),
         ),
         const SizedBox(width: 12),
-        const Expanded(
+        Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 'Events Dashboard',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
+                style: GoogleFonts.dmSans(
+                  color: AppTheme.textPri,
+                  fontSize: 17,
                   fontWeight: FontWeight.w700,
                   letterSpacing: -0.3,
                 ),
               ),
               Text(
                 'Manage & monitor your events',
-                style: TextStyle(color: Color(0xFF888888), fontSize: 12),
+                style: GoogleFonts.dmSans(
+                  color: AppTheme.textSec,
+                  fontSize: 11,
+                ),
               ),
             ],
           ),
@@ -103,20 +112,18 @@ class EventsTab extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 38,
-        height: 38,
+        width: 36,
+        height: 36,
         decoration: BoxDecoration(
-          color: const Color(0xFF1A1A1A),
+          color: AppTheme.surface,
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: const Color(0xFF2A2A2A)),
+          border: Border.all(color: AppTheme.border),
         ),
-        child: Icon(icon, color: const Color(0xFF888888), size: 18),
+        child: Icon(icon, color: AppTheme.textSec, size: 16),
       ),
-      
     );
   }
 
-  // ── STATS ─────────────────────────────────────────────────────
   Widget _buildStatsRow(EventsController controller) {
     return Obx(() {
       final loading = controller.isLoadingEvents.value;
@@ -125,27 +132,27 @@ class EventsTab extends StatelessWidget {
           Expanded(
             child: _statCard(
               icon: Icons.event_rounded,
-              label: 'Total Events',
-              value: loading ? '...' : controller.totalEvents.toString(),
-              color: const Color(0xFFF97316),
+              label: 'Events',
+              value: loading ? '-' : controller.totalEvents.toString(),
+              color: AppTheme.accent,
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 10),
           Expanded(
             child: _statCard(
               icon: Icons.confirmation_num_rounded,
-              label: 'Reservations',
-              value: loading ? '...' : _fmt(controller.totalTicketsSold),
-              color: const Color(0xFF4ADE80),
+              label: 'Reserved',
+              value: loading ? '-' : _fmt(controller.totalTicketsSold),
+              color: AppTheme.success,
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 10),
           Expanded(
             child: _statCard(
               icon: Icons.people_rounded,
               label: 'Capacity',
-              value: loading ? '...' : _fmt(controller.totalCapacity),
-              color: const Color(0xFF60A5FA),
+              value: loading ? '-' : _fmt(controller.totalCapacity),
+              color: AppTheme.info,
             ),
           ),
         ],
@@ -165,9 +172,9 @@ class EventsTab extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: const Color(0xFF1A1A1A),
+        color: AppTheme.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF2A2A2A)),
+        border: Border.all(color: AppTheme.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -176,16 +183,16 @@ class EventsTab extends StatelessWidget {
             width: 32,
             height: 32,
             decoration: BoxDecoration(
-              color: color.withOpacity(0.12),
-              borderRadius: BorderRadius.circular(8),
+              color: color.withOpacity(0.10),
+              borderRadius: BorderRadius.circular(9),
             ),
-            child: Icon(icon, color: color, size: 16),
+            child: Icon(icon, color: color, size: 15),
           ),
           const SizedBox(height: 10),
           Text(
             value,
-            style: const TextStyle(
-              color: Colors.white,
+            style: GoogleFonts.dmSans(
+              color: AppTheme.textPri,
               fontSize: 18,
               fontWeight: FontWeight.w800,
               letterSpacing: -0.5,
@@ -194,33 +201,33 @@ class EventsTab extends StatelessWidget {
           const SizedBox(height: 2),
           Text(
             label,
-            style: const TextStyle(color: Color(0xFF888888), fontSize: 10),
+            style: GoogleFonts.dmSans(color: AppTheme.textSec, fontSize: 10),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildSectionTitle(String title) {
-    return Text(
-      title.toUpperCase(),
-      style: const TextStyle(
-        color: Color(0xFF888888),
-        fontSize: 11,
-        fontWeight: FontWeight.w700,
-        letterSpacing: 1.2,
-      ),
-    );
-  }
+  Widget _sectionLabel(String text) => Text(
+    text,
+    style: GoogleFonts.dmSans(
+      color: AppTheme.textSec,
+      fontSize: 10,
+      fontWeight: FontWeight.w700,
+      letterSpacing: 1.5,
+    ),
+  );
 
-  // ── EVENT LIST ────────────────────────────────────────────────
   Widget _buildEventList(BuildContext context, EventsController controller) {
     return Obx(() {
       if (controller.isLoadingEvents.value) {
         return const Center(
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: 48),
-            child: CircularProgressIndicator(color: Color(0xFFF97316)),
+            child: CircularProgressIndicator(
+              color: AppTheme.accent,
+              strokeWidth: 2,
+            ),
           ),
         );
       }
@@ -232,18 +239,24 @@ class EventsTab extends StatelessWidget {
             children: [
               Icon(
                 Icons.event_busy_rounded,
-                color: const Color(0xFF888888).withOpacity(0.4),
-                size: 52,
+                color: AppTheme.textSec.withOpacity(0.3),
+                size: 48,
               ),
               const SizedBox(height: 12),
-              const Text(
+              Text(
                 'No events yet',
-                style: TextStyle(color: Color(0xFF888888), fontSize: 15),
+                style: GoogleFonts.dmSans(
+                  color: AppTheme.textSec,
+                  fontSize: 14,
+                ),
               ),
-              const SizedBox(height: 6),
-              const Text(
+              const SizedBox(height: 5),
+              Text(
                 'Tap + to create one',
-                style: TextStyle(color: Color(0xFF555555), fontSize: 12),
+                style: GoogleFonts.dmSans(
+                  color: AppTheme.textSec.withOpacity(0.5),
+                  fontSize: 12,
+                ),
               ),
             ],
           ),
@@ -260,24 +273,22 @@ class EventsTab extends StatelessWidget {
     });
   }
 
-  // ── EVENT CARD ────────────────────────────────────────────────
   Widget _buildEventCard(
     BuildContext context,
     EventsController controller,
     Event event,
   ) {
     final status = event.status;
-    final statusColor = switch (status) {
-      'completed' => const Color(0xFF60A5FA),
-      'full' => const Color(0xFFE05555),
-      _ => const Color(0xFF4ADE80),
+    final Color statusColor = switch (status) {
+      'completed' => AppTheme.info,
+      'full' => AppTheme.danger,
+      _ => AppTheme.success,
     };
     final statusLabel = switch (status) {
       'completed' => 'Completed',
       'full' => 'Full',
       _ => 'Active',
     };
-
     final dateStr = event.date != null
         ? DateFormat('dd MMM yyyy').format(event.date!)
         : '-';
@@ -288,101 +299,99 @@ class EventsTab extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF1A1A1A),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF2A2A2A)),
+        color: AppTheme.surface,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: AppTheme.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Title + Badge
+          // title + badge
           Row(
             children: [
               Expanded(
                 child: Text(
                   event.name ?? '-',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
+                  style: GoogleFonts.dmSans(
+                    color: AppTheme.textPri,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 4,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
                 decoration: BoxDecoration(
-                  color: statusColor.withOpacity(0.12),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: statusColor.withOpacity(0.35)),
+                  color: statusColor.withOpacity(0.10),
+                  borderRadius: BorderRadius.circular(7),
+                  border: Border.all(color: statusColor.withOpacity(0.25)),
                 ),
                 child: Text(
                   statusLabel,
-                  style: TextStyle(
+                  style: GoogleFonts.dmSans(
                     color: statusColor,
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ),
             ],
           ),
-
-          // Description
           if (event.desc != null && event.desc!.isNotEmpty) ...[
             const SizedBox(height: 6),
             Text(
               event.desc!,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(color: Color(0xFF666666), fontSize: 12),
+              style: GoogleFonts.dmSans(color: AppTheme.textSec, fontSize: 12),
             ),
           ],
-
           const SizedBox(height: 10),
-
-          // Date & reservations
           Row(
             children: [
               const Icon(
                 Icons.calendar_today_rounded,
-                size: 13,
-                color: Color(0xFF888888),
+                size: 12,
+                color: AppTheme.textSec,
               ),
               const SizedBox(width: 5),
               Text(
                 dateStr,
-                style: const TextStyle(color: Color(0xFF888888), fontSize: 12),
+                style: GoogleFonts.dmSans(
+                  color: AppTheme.textSec,
+                  fontSize: 11,
+                ),
               ),
-              const SizedBox(width: 14),
+              const SizedBox(width: 12),
               const Icon(
                 Icons.people_outline_rounded,
-                size: 13,
-                color: Color(0xFF888888),
+                size: 12,
+                color: AppTheme.textSec,
               ),
               const SizedBox(width: 5),
               Text(
                 '$tickets / $maxR',
-                style: const TextStyle(color: Color(0xFF888888), fontSize: 12),
+                style: GoogleFonts.dmSans(
+                  color: AppTheme.textSec,
+                  fontSize: 11,
+                ),
               ),
             ],
           ),
-
-          const SizedBox(height: 12),
-
-          // Progress
+          const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Capacity filled',
-                style: TextStyle(color: Color(0xFFAAAAAA), fontSize: 11),
+              Text(
+                'Capacity',
+                style: GoogleFonts.dmSans(
+                  color: AppTheme.textSec,
+                  fontSize: 11,
+                ),
               ),
               Text(
                 '${(progress * 100).toInt()}%',
-                style: TextStyle(
+                style: GoogleFonts.dmSans(
                   color: statusColor,
                   fontSize: 11,
                   fontWeight: FontWeight.w700,
@@ -392,25 +401,23 @@ class EventsTab extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           ClipRRect(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(8),
             child: LinearProgressIndicator(
               value: progress,
-              minHeight: 5,
-              backgroundColor: const Color(0xFF2A2A2A),
+              minHeight: 4,
+              backgroundColor: AppTheme.border,
               valueColor: AlwaysStoppedAnimation<Color>(statusColor),
             ),
           ),
-
           const SizedBox(height: 14),
-
-          // Actions
+          // actions
           Row(
             children: [
               Expanded(
                 child: _actionBtn(
                   icon: Icons.qr_code_scanner_rounded,
                   label: 'Scan',
-                  color: const Color(0xFFF97316),
+                  color: AppTheme.accent,
                   onTap: () => _showScanDialog(context, controller),
                 ),
               ),
@@ -419,7 +426,7 @@ class EventsTab extends StatelessWidget {
                 child: _actionBtn(
                   icon: Icons.people_alt_rounded,
                   label: 'Tickets',
-                  color: const Color(0xFF60A5FA),
+                  color: AppTheme.info,
                   onTap: () => _showTicketsDialog(context, event),
                 ),
               ),
@@ -428,7 +435,7 @@ class EventsTab extends StatelessWidget {
                 child: _actionBtn(
                   icon: Icons.edit_rounded,
                   label: 'Edit',
-                  color: const Color(0xFF888888),
+                  color: AppTheme.textSec,
                   onTap: () => controller.showEditSheet(context, event),
                 ),
               ),
@@ -452,23 +459,23 @@ class EventsTab extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 9),
+        padding: const EdgeInsets.symmetric(vertical: 8),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.08),
+          color: color.withOpacity(0.07),
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: color.withOpacity(0.2)),
+          border: Border.all(color: color.withOpacity(0.18)),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 14, color: color),
+            Icon(icon, size: 13, color: color),
             const SizedBox(width: 5),
             Text(
               label,
-              style: TextStyle(
+              style: GoogleFonts.dmSans(
                 color: color,
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
               ),
             ),
           ],
@@ -481,67 +488,73 @@ class EventsTab extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 38,
-        height: 38,
+        width: 36,
+        height: 36,
         decoration: BoxDecoration(
-          color: const Color(0xFFE05555).withOpacity(0.08),
+          color: AppTheme.danger.withOpacity(0.07),
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: const Color(0xFFE05555).withOpacity(0.2)),
+          border: Border.all(color: AppTheme.danger.withOpacity(0.18)),
         ),
         child: const Icon(
           Icons.delete_outline_rounded,
-          size: 16,
-          color: Color(0xFFE05555),
+          size: 15,
+          color: AppTheme.danger,
         ),
       ),
     );
   }
 
-  // ── SCAN / CHECK-IN DIALOG ────────────────────────────────────
   void _showScanDialog(BuildContext context, EventsController controller) {
     final codeCtrl = TextEditingController();
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: const Color(0xFF1A1A1A),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text(
+        backgroundColor: AppTheme.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+          side: const BorderSide(color: AppTheme.border),
+        ),
+        title: Text(
           'Check-In Ticket',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
+          style: GoogleFonts.dmSans(
+            color: AppTheme.textPri,
+            fontWeight: FontWeight.w700,
+            fontSize: 17,
+          ),
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
+            Text(
               'Enter ticket code to check in the attendee.',
-              style: TextStyle(color: Color(0xFF888888), fontSize: 13),
+              style: GoogleFonts.dmSans(color: AppTheme.textSec, fontSize: 13),
             ),
             const SizedBox(height: 16),
             TextField(
               controller: codeCtrl,
-              style: const TextStyle(color: Colors.white),
+              style: const TextStyle(color: AppTheme.textPri),
               decoration: InputDecoration(
                 hintText: 'ikutan-xxxx-...',
-                hintStyle: const TextStyle(color: Color(0xFF555555)),
+                hintStyle: const TextStyle(color: AppTheme.textSec),
                 prefixIcon: const Icon(
                   Icons.qr_code_rounded,
-                  color: Color(0xFF888888),
-                  size: 20,
+                  color: AppTheme.textSec,
+                  size: 18,
                 ),
                 filled: true,
-                fillColor: const Color(0xFF222222),
+                fillColor: AppTheme.surface2,
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: Color(0xFF2A2A2A)),
+                  borderRadius: BorderRadius.circular(11),
+                  borderSide: const BorderSide(color: AppTheme.border),
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: Color(0xFF2A2A2A)),
+                  borderRadius: BorderRadius.circular(11),
+                  borderSide: const BorderSide(color: AppTheme.border),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(11),
                   borderSide: const BorderSide(
-                    color: Color(0xFFF97316),
+                    color: AppTheme.accent,
                     width: 1.5,
                   ),
                 ),
@@ -552,9 +565,9 @@ class EventsTab extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child: const Text(
+            child: Text(
               'Cancel',
-              style: TextStyle(color: Color(0xFF888888)),
+              style: GoogleFonts.dmSans(color: AppTheme.textSec),
             ),
           ),
           TextButton(
@@ -574,10 +587,10 @@ class EventsTab extends StatelessWidget {
                 ShowSnack.error(e.toString());
               }
             },
-            child: const Text(
+            child: Text(
               'Check In',
-              style: TextStyle(
-                color: Color(0xFFF97316),
+              style: GoogleFonts.dmSans(
+                color: AppTheme.accent,
                 fontWeight: FontWeight.w700,
               ),
             ),
@@ -587,17 +600,19 @@ class EventsTab extends StatelessWidget {
     );
   }
 
-  // ── TICKETS INFO DIALOG ───────────────────────────────────────
   void _showTicketsDialog(BuildContext context, Event event) {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: const Color(0xFF1A1A1A),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        backgroundColor: AppTheme.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+          side: const BorderSide(color: AppTheme.border),
+        ),
         title: Text(
           event.name ?? 'Event',
-          style: const TextStyle(
-            color: Colors.white,
+          style: GoogleFonts.dmSans(
+            color: AppTheme.textPri,
             fontWeight: FontWeight.w700,
           ),
         ),
@@ -618,9 +633,9 @@ class EventsTab extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child: const Text(
+            child: Text(
               'Close',
-              style: TextStyle(color: Color(0xFFF97316)),
+              style: GoogleFonts.dmSans(color: AppTheme.accent),
             ),
           ),
         ],
@@ -636,12 +651,12 @@ class EventsTab extends StatelessWidget {
         children: [
           Text(
             label,
-            style: const TextStyle(color: Color(0xFF888888), fontSize: 13),
+            style: GoogleFonts.dmSans(color: AppTheme.textSec, fontSize: 13),
           ),
           Text(
             value,
-            style: const TextStyle(
-              color: Colors.white,
+            style: GoogleFonts.dmSans(
+              color: AppTheme.textPri,
               fontSize: 13,
               fontWeight: FontWeight.w600,
             ),
@@ -651,32 +666,31 @@ class EventsTab extends StatelessWidget {
     );
   }
 
-  // ── QUICK ACTIONS ─────────────────────────────────────────────
   Widget _buildQuickActions(BuildContext context, EventsController controller) {
     return GridView.count(
       crossAxisCount: 2,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      crossAxisSpacing: 12,
-      mainAxisSpacing: 12,
-      childAspectRatio: 2.4,
+      crossAxisSpacing: 10,
+      mainAxisSpacing: 10,
+      childAspectRatio: 2.5,
       children: [
         _quickCard(
           icon: Icons.add_circle_outline_rounded,
           label: 'Create Event',
-          color: const Color(0xFFF97316),
+          color: AppTheme.accent,
           onTap: () => controller.showCreateSheet(context),
         ),
         _quickCard(
           icon: Icons.qr_code_scanner_rounded,
           label: 'Check-In Scan',
-          color: const Color(0xFF4ADE80),
+          color: AppTheme.success,
           onTap: () => _showScanDialog(context, controller),
         ),
         _quickCard(
           icon: Icons.refresh_rounded,
           label: 'Refresh Data',
-          color: const Color(0xFF60A5FA),
+          color: AppTheme.info,
           onTap: () => controller.fetchEvents(),
         ),
         _quickCard(
@@ -700,29 +714,29 @@ class EventsTab extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         decoration: BoxDecoration(
-          color: const Color(0xFF1A1A1A),
+          color: AppTheme.surface,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: const Color(0xFF2A2A2A)),
+          border: Border.all(color: AppTheme.border),
         ),
         child: Row(
           children: [
             Container(
-              width: 32,
-              height: 32,
+              width: 30,
+              height: 30,
               decoration: BoxDecoration(
-                color: color.withOpacity(0.12),
+                color: color.withOpacity(0.10),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Icon(icon, color: color, size: 16),
+              child: Icon(icon, color: color, size: 14),
             ),
             const SizedBox(width: 10),
             Expanded(
               child: Text(
                 label,
-                style: const TextStyle(
-                  color: Colors.white,
+                style: GoogleFonts.dmSans(
+                  color: AppTheme.textPri,
                   fontSize: 12,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
@@ -732,21 +746,25 @@ class EventsTab extends StatelessWidget {
     );
   }
 
-  // ── SUMMARY DIALOG ────────────────────────────────────────────
   void _showSummary(BuildContext context, EventsController controller) {
     final evts = controller.events;
     final active = evts.where((e) => e.status == 'active').length;
     final completed = evts.where((e) => e.status == 'completed').length;
     final full = evts.where((e) => e.status == 'full').length;
-
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: const Color(0xFF1A1A1A),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text(
+        backgroundColor: AppTheme.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+          side: const BorderSide(color: AppTheme.border),
+        ),
+        title: Text(
           'Summary',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
+          style: GoogleFonts.dmSans(
+            color: AppTheme.textPri,
+            fontWeight: FontWeight.w700,
+          ),
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -755,7 +773,7 @@ class EventsTab extends StatelessWidget {
             _infoRow('Active', active.toString()),
             _infoRow('Completed', completed.toString()),
             _infoRow('Full', full.toString()),
-            const Divider(color: Color(0xFF2A2A2A), height: 20),
+            const Divider(color: AppTheme.border, height: 20),
             _infoRow(
               'Total Reservations',
               controller.totalTicketsSold.toString(),
@@ -766,9 +784,9 @@ class EventsTab extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child: const Text(
+            child: Text(
               'Close',
-              style: TextStyle(color: Color(0xFFF97316)),
+              style: GoogleFonts.dmSans(color: AppTheme.accent),
             ),
           ),
         ],
